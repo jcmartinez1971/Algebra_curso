@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecuaciones Cuadráticas | Misión Matemática</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root{
+  --azul:#4f7cff;
+  --azul-oscuro:#3156c9;
+  --morado:#8b5cf6;
+  --verde:#22c55e;
+  --rojo:#ef4444;
+  --amarillo:#fbbf24;
+  --fondo:#f4f7ff;
+  --texto:#26324a;
+  --gris:#64748b;
+  --blanco:#fff;
+  --sombra:0 10px 30px rgba(50,70,120,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Nunito',Arial,sans-serif;
+  background:linear-gradient(135deg,#eef4ff,#f8f3ff);
+  color:var(--texto);
+}
+header{
+  background:linear-gradient(135deg,var(--azul),var(--morado));
+  color:white;
+  padding:28px 20px 34px;
+  text-align:center;
+}
+header h1{margin:0;font-size:clamp(2.6rem,6vw,4rem);font-weight:900}
+header p{margin:8px 0 0;font-size:1.55rem;opacity:.95}
+.container{max-width:1050px;margin:auto;padding:20px}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:-24px;
+}
+.stat{
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+  box-shadow:var(--sombra);
+}
+.stat strong{display:block;font-size:2rem;color:var(--azul)}
+.stat span{font-size:1.1rem;color:var(--gris)}
+.progress-wrap{
+  background:white;padding:18px;border-radius:18px;
+  box-shadow:var(--sombra);margin:20px 0;
+}
+.progress-title{display:flex;justify-content:space-between;font-weight:800;margin-bottom:8px}
+.progress{height:12px;background:#e7ecf7;border-radius:20px;overflow:hidden}
+.progress-bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--azul),var(--morado));
+  transition:width .5s;
+}
+.card{
+  background:white;border-radius:24px;padding:28px;
+  box-shadow:var(--sombra);margin:20px 0;
+}
+.badge{
+  display:inline-block;background:#e9efff;color:var(--azul-oscuro);
+  padding:7px 13px;border-radius:20px;font-weight:800;font-size:1rem;
+}
+h2{font-size:2.25rem;margin:12px 0}
+h3{font-size:1.55rem}
+.formula{
+  background:#f1f5ff;border-left:6px solid var(--azul);
+  padding:18px;border-radius:12px;text-align:center;
+  font-size:2rem;font-weight:800;margin:18px 0;
+}
+.highlight{
+  background:#fff8df;border-left:6px solid var(--amarillo);
+  padding:16px;border-radius:12px;
+}
+.example{
+  background:#f5f3ff;border-left:6px solid var(--morado);
+  padding:18px;border-radius:12px;margin:15px 0;
+}
+.steps{counter-reset:paso;list-style:none;padding:0}
+.steps li{
+  counter-increment:paso;
+  margin:12px 0;padding:13px 13px 13px 52px;
+  background:#f8fafc;border-radius:12px;position:relative;
+}
+.steps li:before{
+  content:counter(paso);position:absolute;left:14px;top:10px;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--azul);color:white;text-align:center;
+  line-height:28px;font-weight:900;
+}
+.question{
+  font-size:1.5rem;font-weight:800;margin:20px 0;
+}
+.options{display:grid;gap:12px}
+.option{
+  border:2px solid #dbe3f2;background:white;
+  padding:18px;border-radius:14px;cursor:pointer;
+  font:inherit;font-weight:700;text-align:left;
+  transition:.2s;
+}
+.option:hover{border-color:var(--azul);background:#f4f7ff;transform:translateY(-2px)}
+.option.correct{border-color:var(--verde);background:#ecfdf3}
+.option.incorrect{border-color:var(--rojo);background:#fef2f2}
+.feedback{
+  margin-top:15px;padding:18px;border-radius:12px;
+  display:none;font-weight:700;
+}
+.feedback.ok{display:block;background:#dcfce7;color:#166534}
+.feedback.bad{display:block;background:#fee2e2;color:#991b1b}
+button.main{
+  border:0;border-radius:14px;padding:16px 26px;
+  background:linear-gradient(135deg,var(--azul),var(--morado));
+  color:white;font:inherit;font-weight:900;cursor:pointer;
+  box-shadow:0 7px 18px rgba(79,124,255,.25);
+  margin-top:15px;
+}
+button.main:hover{transform:translateY(-2px)}
+.center{text-align:center}
+.level{
+  display:inline-block;background:#fff7d6;color:#8a6500;
+  padding:7px 14px;border-radius:20px;font-weight:900;
+}
+.table{
+  width:100%;border-collapse:collapse;margin:15px 0;overflow:hidden;
+  border-radius:12px;
+}
+.table th,.table td{padding:13px;border-bottom:1px solid #e5eaf2;text-align:left}
+.table th{background:#eef3ff;color:#3156c9}
+.challenge{
+  border:3px dashed #c7d2fe;background:#f8faff;
+  padding:20px;border-radius:18px;
+}
+input{
+  padding:12px;border:2px solid #dbe3f2;border-radius:10px;
+  font:inherit;width:110px;text-align:center;
+}
+footer{text-align:center;padding:30px;color:var(--gris)}
+.hidden{display:none}
+@media(max-width:650px){
+  .stats{grid-template-columns:1fr}
+  .card{padding:20px}
+  .formula{font-size:1.55rem}
+}
+</style>
+
+<style>
+/* V2: tipografía grande para aula y proyector */
+body {
+  font-size: 1.18rem;
+  line-height: 1.65;
+}
+.card p, .card li, .card td, .card th {
+  font-size: 1.22rem;
+}
+.card h2 {
+  font-size: 2.35rem;
+}
+.card h3 {
+  font-size: 1.7rem;
+}
+.badge {
+  font-size: 1.05rem;
+  padding: 9px 16px;
+}
+.option {
+  font-size: 1.22rem;
+  padding: 18px;
+}
+button.main {
+  font-size: 1.18rem;
+}
+.feedback {
+  font-size: 1.18rem;
+}
+.highlight, .example, .challenge {
+  font-size: 1.18rem;
+}
+.progress-title {
+  font-size: 1.15rem;
+}
+footer {
+  font-size: 1.05rem;
+}
+@media(max-width:650px) {
+  body { font-size: 1.08rem; }
+  .card p, .card li, .card td, .card th { font-size: 1.12rem; }
+  .card h2 { font-size: 1.9rem; }
+  .formula { font-size: 1.55rem; }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <div style="font-size:3rem">🧮</div>
+  <h1>Misión: Ecuaciones Cuadráticas</h1>
+  <p>Aprende, resuelve y supera los retos matemáticos</p>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat">
+      <strong id="score">0</strong>
+      <span>Puntos</span>
+    </div>
+    <div class="stat">
+      <strong id="level">1</strong>
+      <span>Nivel</span>
+    </div>
+    <div class="stat">
+      <strong id="correct">0</strong>
+      <span>Respuestas correctas</span>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-title">
+      <span>Progreso de la misión</span>
+      <span id="progressText">0 / 8</span>
+    </div>
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <section class="card">
+    <span class="badge">NIVEL 1 · CONCEPTO</span>
+    <h2>¿Qué es una ecuación cuadrática?</h2>
+    <p>
+      Una ecuación cuadrática, también llamada ecuación de segundo grado,
+      es una ecuación en la que el exponente mayor de la variable es 2.
+    </p>
+
+    <div class="formula">
+      ax² + bx + c = 0
+    </div>
+
+    <div class="highlight">
+      <strong>Recuerda:</strong> el valor de <strong>a</strong> no puede ser 0.
+      La variable normalmente es <strong>x</strong>.
+    </div>
+
+    <h3>¿Qué representan a, b y c?</h3>
+    <table class="table">
+      <tr><th>Elemento</th><th>Función</th></tr>
+      <tr><td><strong>a</strong></td><td>Coeficiente de x²</td></tr>
+      <tr><td><strong>b</strong></td><td>Coeficiente de x</td></tr>
+      <tr><td><strong>c</strong></td><td>Término independiente</td></tr>
+    </table>
+
+    <div class="example">
+      <strong>Ejemplo:</strong>
+      <div class="formula">2x² + 5x + 3 = 0</div>
+      <p>a = 2 &nbsp;&nbsp; b = 5 &nbsp;&nbsp; c = 3</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="badge">RETO 1</span>
+    <div class="question">
+      ¿Cuál de estas ecuaciones es cuadrática?
+    </div>
+    <div class="options" data-question="1">
+      <button class="option" onclick="answer(this,false,1)">5x + 3 = 0</button>
+      <button class="option" onclick="answer(this,true,1)">2x² + 5x + 3 = 0</button>
+      <button class="option" onclick="answer(this,false,1)">7x − 4 = 0</button>
+    </div>
+    <div class="feedback" id="feedback1"></div>
+  </section>
+
+  <section class="card">
+    <span class="badge">NIVEL 2 · IDENTIFICACIÓN</span>
+    <h2>Reconoce una ecuación cuadrática</h2>
+    <p>
+      Algunas ecuaciones no aparecen inmediatamente en la forma
+      <strong>ax² + bx + c = 0</strong>. Podemos reorganizarlas.
+    </p>
+
+    <div class="example">
+      <strong>Ejemplo:</strong>
+      <p>x² = 3x − 1</p>
+      <p>Movemos todos los términos al lado izquierdo:</p>
+      <div class="formula">x² − 3x + 1 = 0</div>
+      <p>Por tanto: <strong>a = 1, b = −3, c = 1</strong></p>
+    </div>
+
+    <div class="example">
+      <strong>Otro ejemplo:</strong>
+      <p>2(w² − 2w) = 5</p>
+      <p>Desarrollamos:</p>
+      <div class="formula">2w² − 4w − 5 = 0</div>
+      <p>Por tanto: <strong>a = 2, b = −4, c = −5</strong></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="badge">RETO 2</span>
+    <div class="question">
+      En la ecuación 3x² − 7x + 2 = 0, ¿cuál es el valor de b?
+    </div>
+    <div class="options" data-question="2">
+      <button class="option" onclick="answer(this,false,2)">3</button>
+      <button class="option" onclick="answer(this,true,2)">−7</button>
+      <button class="option" onclick="answer(this,false,2)">2</button>
+    </div>
+    <div class="feedback" id="feedback2"></div>
+  </section>
+
+  <section class="card">
+    <span class="badge">NIVEL 3 · SOLUCIONES</span>
+    <h2>¿Qué significa resolver una ecuación?</h2>
+    <p>
+      Las soluciones son los valores de la variable que hacen que la
+      ecuación sea igual a cero. También pueden llamarse
+      <strong>raíces</strong> o <strong>ceros</strong>.
+    </p>
+
+    <div class="highlight">
+      Una ecuación cuadrática puede tener dos soluciones reales,
+      una solución real o soluciones complejas, dependiendo del discriminante.
+    </div>
+
+    <h3>El discriminante</h3>
+    <div class="formula">Δ = b² − 4ac</div>
+
+    <table class="table">
+      <tr><th>Valor de Δ</th><th>Tipo de soluciones</th></tr>
+      <tr><td>Δ &gt; 0</td><td>Dos soluciones reales</td></tr>
+      <tr><td>Δ = 0</td><td>Una solución real</td></tr>
+      <tr><td>Δ &lt; 0</td><td>Dos soluciones complejas</td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <span class="badge">RETO 3</span>
+    <div class="question">
+      Si Δ = 25, ¿cuántas soluciones reales tiene la ecuación?
+    </div>
+    <div class="options" data-question="3">
+      <button class="option" onclick="answer(this,true,3)">Dos soluciones reales</button>
+      <button class="option" onclick="answer(this,false,3)">Una solución real</button>
+      <button class="option" onclick="answer(this,false,3)">Dos soluciones complejas</button>
+    </div>
+    <div class="feedback" id="feedback3"></div>
+  </section>
+
+  <section class="card">
+    <span class="badge">NIVEL 4 · LA FÓRMULA</span>
+    <h2>La fórmula cuadrática</h2>
+
+    <div class="formula">
+      x = (−b ± √(b² − 4ac)) / 2a
+    </div>
+
+    <p>
+      El símbolo <strong>±</strong> significa que debemos considerar
+      dos posibilidades: una con suma y otra con resta.
+    </p>
+
+    <ol class="steps">
+      <li>Identifica los valores de <strong>a, b y c</strong>.</li>
+      <li>Calcula el discriminante <strong>b² − 4ac</strong>.</li>
+      <li>Sustituye los valores en la fórmula.</li>
+      <li>Realiza las operaciones.</li>
+      <li>Obtén las soluciones.</li>
+    </ol>
+
+    <div class="example">
+      <strong>Ejemplo paso a paso:</strong>
+      <p>Resolver:</p>
+      <div class="formula">5x² + 6x + 1 = 0</div>
+
+      <p><strong>1.</strong> Identificamos:</p>
+      <p>a = 5, b = 6, c = 1</p>
+
+      <p><strong>2.</strong> Sustituimos:</p>
+      <p>x = (−6 ± √(6² − 4·5·1)) / 10</p>
+
+      <p><strong>3.</strong> Calculamos:</p>
+      <p>x = (−6 ± √16) / 10</p>
+
+      <p><strong>4.</strong> Como √16 = 4:</p>
+      <p>x = (−6 ± 4) / 10</p>
+
+      <p><strong>5. Resultado:</strong></p>
+      <div class="formula">x = −0.2 &nbsp; o &nbsp; x = −1</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="badge">RETO 4 · FÓRMULA CUADRÁTICA</span>
+    <div class="question">
+      Para 5x² + 6x + 1 = 0, ¿cuál es el valor de a?
+    </div>
+    <div class="options" data-question="4">
+      <button class="option" onclick="answer(this,true,4)">5</button>
+      <button class="option" onclick="answer(this,false,4)">6</button>
+      <button class="option" onclick="answer(this,false,4)">1</button>
+    </div>
+    <div class="feedback" id="feedback4"></div>
+  </section>
+
+  <section class="card">
+    <span class="badge">RETO 5 · DISCRIMINANTE</span>
+    <div class="question">
+      Calcula el discriminante de:
+      <br><br>
+      <strong>x² − 4x + 3 = 0</strong>
+    </div>
+
+    <div class="challenge">
+      <p>Usa:</p>
+      <div class="formula">Δ = b² − 4ac</div>
+      <p>
+        a = 1 &nbsp;&nbsp; b = −4 &nbsp;&nbsp; c = 3
+      </p>
+      <button class="main" onclick="showAnswer5()">Mostrar resultado</button>
+      <div class="feedback" id="feedback5"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="badge">NIVEL FINAL · APLICA LO APRENDIDO</span>
+    <h2>Desafío final</h2>
+    <p>
+      Ahora intenta resolver una ecuación completa utilizando la fórmula
+      cuadrática.
+    </p>
+
+    <div class="formula">x² − 5x + 6 = 0</div>
+
+    <div class="challenge">
+      <p><strong>Pista 1:</strong> identifica a, b y c.</p>
+      <p><strong>Pista 2:</strong> calcula el discriminante.</p>
+      <p><strong>Pista 3:</strong> aplica la fórmula.</p>
+
+      <button class="main" onclick="finalAnswer()">Comprobar solución</button>
+      <div class="feedback" id="feedbackFinal"></div>
+    </div>
+  </section>
+
+  <section class="card center">
+    <span class="level" id="finalLevel">NIVEL 1</span>
+    <h2 id="finalTitle">¡Tu misión continúa!</h2>
+    <p id="finalMessage">
+      Resuelve los retos para acumular puntos y avanzar de nivel.
+    </p>
+    <button class="main" onclick="restart()">Reiniciar misión</button>
+  </section>
+
+</div>
+
+<footer>
+  Matemáticas · Bachillerato · Misión de Ecuaciones Cuadráticas
+</footer>
+
+<script>
+let score = 0;
+let correct = 0;
+let answered = new Set();
+
+function answer(button, isCorrect, q){
+  if(answered.has(q)) return;
+
+  const group = button.parentElement;
+  const buttons = group.querySelectorAll('.option');
+  const feedback = document.getElementById('feedback' + q);
+
+  buttons.forEach(b => b.disabled = true);
+
+  if(isCorrect){
+    button.classList.add('correct');
+    score += 100;
+    correct++;
+    feedback.className = 'feedback ok';
+    feedback.textContent = '¡Correcto! +100 puntos. Muy bien.';
+  }else{
+    button.classList.add('incorrect');
+    score = Math.max(0, score - 25);
+    feedback.className = 'feedback bad';
+    feedback.textContent = 'Todavía no. Revisa el concepto y vuelve a intentarlo en el siguiente reto.';
+  }
+
+  answered.add(q);
+  updateStats();
+}
+
+function showAnswer5(){
+  const feedback = document.getElementById('feedback5');
+  if(answered.has(5)) return;
+
+  feedback.className = 'feedback ok';
+  feedback.innerHTML =
+    'Δ = (−4)² − 4(1)(3) = 16 − 12 = <strong>4</strong>. ' +
+    'Como Δ &gt; 0, existen dos soluciones reales.';
+  score += 100;
+  correct++;
+  answered.add(5);
+  updateStats();
+}
+
+function finalAnswer(){
+  const feedback = document.getElementById('feedbackFinal');
+
+  if(!answered.has(6)){
+    feedback.className = 'feedback ok';
+    feedback.innerHTML =
+      'Δ = (−5)² − 4(1)(6) = 1. ' +
+      'Por tanto: x = (5 ± 1)/2. ' +
+      '<strong>Soluciones: x = 3 y x = 2.</strong>';
+    score += 200;
+    correct++;
+    answered.add(6);
+    updateStats();
+  }
+}
+
+function updateStats(){
+  document.getElementById('score').textContent = score;
+  document.getElementById('correct').textContent = correct;
+
+  let level = 1;
+  if(score >= 200) level = 2;
+  if(score >= 400) level = 3;
+  if(score >= 600) level = 4;
+  if(score >= 800) level = 5;
+
+  document.getElementById('level').textContent = level;
+  document.getElementById('finalLevel').textContent = 'NIVEL ' + level;
+
+  const total = 6;
+  const progress = Math.min(100, Math.round((answered.size / total) * 100));
+  document.getElementById('progressBar').style.width = progress + '%';
+  document.getElementById('progressText').textContent =
+    answered.size + ' / ' + total;
+
+  if(answered.size === total){
+    document.getElementById('finalTitle').textContent = '¡Misión completada!';
+    document.getElementById('finalMessage').textContent =
+      'Has completado todos los retos. Puntuación final: ' + score + ' puntos.';
+  }
+}
+
+function restart(){
+  location.reload();
+}
+</script>
+
+</body>
+</html>
